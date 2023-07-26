@@ -1,3 +1,5 @@
+LinearB bot that takes screenshots of all the needed charts to add them in your confluence report.
+
 ## How to use
 
 - Node v16+
