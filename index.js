@@ -60,7 +60,7 @@ const screenshotMetricsCharts = async () => {
         );
 
         const chartsContainerElem = await page.waitForXPath('/html/body/div[1]/div/div[2]/div/div/div[2]');
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(4000);
 
         const startDateObj = new Date(startDate);
         const year = startDateObj.getFullYear();
