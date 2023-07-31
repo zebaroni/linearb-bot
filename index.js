@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
-import {input} from '@inquirer/prompts';
+import {input, select} from '@inquirer/prompts';
 import fs from 'fs';
-import {format} from "date-fns";
+import {format, subWeeks} from "date-fns";
 
 let startDate = null;
 let endDate = null;
@@ -93,8 +93,35 @@ const saveCookies = async (cookies) => {
 }
 
 (async () => {
-    startDate = await input({message: 'Whats the start date? (YYYY-MM-DD)'});
-    endDate = await input({message: 'Whats the end date? (YYYY-MM-DD)'});
+    let todayDate = new Date();
+    todayDate.setUTCHours(12, 0, 0, 0);
+    let past2weeksDate = subWeeks(todayDate, 2);
+    todayDate = format(todayDate, "yyyy-MM-dd");
+    past2weeksDate = format(past2weeksDate, "yyyy-MM-dd");
+
+    console.log(todayDate, past2weeksDate);
+
+    const dateType = await select({
+        message: 'Select a date to generate your charts:',
+        choices: [
+            {
+                'name': `Last 2 weeks (${past2weeksDate} - ${todayDate})`,
+                'value': '2-week'
+            },
+            {
+                'name': `Custom date range`,
+                'value': 'custom'
+            },
+        ]
+    });
+
+    if (dateType === "2-week") {
+        startDate = past2weeksDate;
+        endDate = todayDate;
+    } else {
+        startDate = await input({message: 'Whats the start date? (YYYY-MM-DD)'});
+        endDate = await input({message: 'Whats the end date? (YYYY-MM-DD)'});
+    }
 
     const startDateObj = new Date(startDate);
     startDateObj.setUTCHours(12, 0, 0, 0);
